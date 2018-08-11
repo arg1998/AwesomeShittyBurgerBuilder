@@ -33,15 +33,34 @@ class Burgeruilder extends Component {
     }
 
     removeIngredientHandler = (type) => {
-
+        const oldCount = this.state.ingredients[type];
+        const oldPrice = this.state.totalPrice;
+        const newIngs = { ...this.state.ingredients }
+        newIngs[type] = oldCount - 1
+        if (newIngs[type] === -1) {
+            return;
+        }
+        this.setState({
+            ingredients: { ...newIngs },
+            totalPrice: oldPrice - INGREDIENT_PRICES[type]
+        })
     }
 
     render() {
+        //find which component should be disabled depending to ingredients quantity
+        // { meat: true, salad: false}
+        const disabledInfo = { ...this.state.ingredients };
+        for (let key in disabledInfo) {
+            disabledInfo[key] = disabledInfo[key] <= 0;
+        }
         return (
             <Wrapper>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls
-                    ingredientAdded={this.addIngredientHandler} />
+                    ingredientAdded={this.addIngredientHandler}
+                    ingredientRemoved={this.removeIngredientHandler}
+                    disabled={disabledInfo}
+                    price={this.state.totalPrice} />
 
             </Wrapper>
         );

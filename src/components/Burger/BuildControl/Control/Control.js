@@ -6,6 +6,8 @@ const control = (props) => (
         <div className={classes.Label}>{props.label}</div>
 
         <button
+            disabled={props.disabled}
+            onClick={props.ingredientRemoved}
             className={classes.Less}> Less
         </button>
 
