@@ -18,8 +18,18 @@ class Burgeruilder extends Component {
             meat: 0,
             salad: 0
         },
-        totalPrice: 3
+        totalPrice: 3,
+        canPurchase: false
     };
+
+
+    updateCanPurchaseState(ingredients) {
+        const sum = Object.keys(ingredients)
+            .map(ingKey => ingredients[ingKey])
+            .reduce((_sum, current) => _sum + current, 0);
+
+        this.setState({ canPurchase: sum > 0 });
+    }
 
     addIngredientHandler = (type) => {
         const oldCount = this.state.ingredients[type];
@@ -30,20 +40,21 @@ class Burgeruilder extends Component {
             ingredients: { ...newIngs },
             totalPrice: oldPrice + INGREDIENT_PRICES[type]
         })
+        this.updateCanPurchaseState(newIngs);
+
     }
 
     removeIngredientHandler = (type) => {
         const oldCount = this.state.ingredients[type];
+        if (oldCount === 0) return;
         const oldPrice = this.state.totalPrice;
         const newIngs = { ...this.state.ingredients }
         newIngs[type] = oldCount - 1
-        if (newIngs[type] === -1) {
-            return;
-        }
         this.setState({
             ingredients: { ...newIngs },
             totalPrice: oldPrice - INGREDIENT_PRICES[type]
         })
+        this.updateCanPurchaseState(newIngs);
     }
 
     render() {
@@ -60,7 +71,8 @@ class Burgeruilder extends Component {
                     ingredientAdded={this.addIngredientHandler}
                     ingredientRemoved={this.removeIngredientHandler}
                     disabled={disabledInfo}
-                    price={this.state.totalPrice} />
+                    price={this.state.totalPrice}
+                    canPurchase={this.state.canPurchase} />
 
             </Wrapper>
         );
