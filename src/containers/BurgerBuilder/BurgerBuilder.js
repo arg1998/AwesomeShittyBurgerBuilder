@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Wrapper from '../../HOC/Wrapper';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControl/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
 
 const INGREDIENT_PRICES = {
     bacon: 0.9,
