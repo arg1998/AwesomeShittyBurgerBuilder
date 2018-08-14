@@ -2,7 +2,7 @@ import React from "react";
 
 import classes from "./Button.css";
 
-const button = props => (
+const Button = props => (
     <button
         className={[classes.Button, classes[props.btnType]].join(' ')}
         onClick={props.onClick}>
@@ -10,4 +10,4 @@ const button = props => (
     </button>
 );
 
-export default button;
+export default Button;
