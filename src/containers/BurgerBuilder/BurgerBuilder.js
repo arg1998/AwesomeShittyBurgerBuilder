@@ -1,9 +1,12 @@
-import React, { Component } from "react";
-import Wrapper from "../../HOC/Wrapper";
-import Burger from "../../components/Burger/Burger";
-import BuildControls from "../../components/Burger/BuildControl/BuildControls";
-import Modal from "../../components/UI/Modal/Modal";
-import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import React, { Component } from 'react';
+import Wrapper from '../../HOC/Wrapper';
+import Burger from '../../components/Burger/Burger';
+import BuildControls from '../../components/Burger/BuildControl/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import axios from '../../axios-config-instance';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../HOC/withErrorHandler/withErrorHandler';
 
 const INGREDIENT_PRICES = {
     bacon: 0.9,
@@ -22,7 +25,8 @@ class Burgeruilder extends Component {
         },
         totalPrice: 3,
         canPurchase: false, // can purcahse the burger or not?
-        purchasing: false // does user clicker the ORDER button?
+        purchasing: false, // does user clicker the ORDER button?
+        loading: false // is modal in loading state?
     };
 
     updateCanPurchaseState(ingredients) {
@@ -64,7 +68,33 @@ class Burgeruilder extends Component {
     purchaseCancelHandler = () => {
         this.setState({ purchasing: false });
     };
-    purchaseContinueHandler = () => {};
+    purchaseContinueHandler = () => {
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.state.totalPrice.toFixed(2),
+            customer: {
+                name: 'Amir Reza',
+                address: {
+                    street: 'mission 1',
+                    zipCode: 8585
+                },
+                email: 'amir@amir.com',
+                delivetyMethod: 'fastest'
+            }
+        };
+
+        axios
+            .post('/orders.json', order)
+            .then(res => {
+                this.setState({ loading: false, purchasing: false });
+                console.log(res);
+            })
+            .catch(err => {
+                this.setState({ loading: false, purchasing: false });
+                console.log(err);
+            });
+        this.setState({ loading: true });
+    };
 
     render() {
         //find which component should be disabled depending to ingredients quantity
@@ -73,17 +103,26 @@ class Burgeruilder extends Component {
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
+
+        let modalContent = (
+            <OrderSummary
+                cancelPurchase={this.purchaseCancelHandler}
+                continuePurchase={this.purchaseContinueHandler}
+                ingredients={this.state.ingredients}
+                price={this.state.totalPrice.toFixed(2)}
+            />
+        );
+
+        if (this.state.loading) {
+            modalContent = <Spinner />;
+        }
+
         return (
             <Wrapper>
                 <Modal
                     modalClosed={this.purchaseCancelHandler}
                     show={this.state.purchasing}>
-                    <OrderSummary
-                        cancelPurchase={this.purchaseCancelHandler}
-                        continuePurchase={this.purchaseContinueHandler}
-                        ingredients={this.state.ingredients}
-                        price={this.state.totalPrice.toFixed(2)}
-                    />
+                    {modalContent}
                 </Modal>
 
                 <Burger ingredients={this.state.ingredients} />
@@ -100,4 +139,5 @@ class Burgeruilder extends Component {
     }
 }
 
-export default Burgeruilder;
+// export default Burgeruilder;
+export default withErrorHandler(Burgeruilder, axios);
