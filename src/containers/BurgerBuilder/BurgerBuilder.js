@@ -69,31 +69,21 @@ class Burgeruilder extends Component {
         this.setState({ purchasing: false });
     };
     purchaseContinueHandler = () => {
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice.toFixed(2),
-            customer: {
-                name: 'Amir Reza',
-                address: {
-                    street: 'mission 1',
-                    zipCode: 8585
-                },
-                email: 'amir@amir.com',
-                delivetyMethod: 'fastest'
-            }
-        };
+        const queryIngs = [];
+        for (const key in this.state.ingredients) {
+            queryIngs.push(
+                encodeURIComponent(key) +
+                    '=' +
+                    encodeURIComponent(this.state.ingredients[key])
+            );
+        }
+        queryIngs.push('price=' + this.state.totalPrice);
+        const queryString = queryIngs.join('&');
 
-        axios
-            .post('/orders.json', order)
-            .then(res => {
-                this.setState({ loading: false, purchasing: false });
-                console.log(res);
-            })
-            .catch(err => {
-                this.setState({ loading: false, purchasing: false });
-                console.log(err);
-            });
-        this.setState({ loading: true });
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
+        });
     };
 
     render() {
