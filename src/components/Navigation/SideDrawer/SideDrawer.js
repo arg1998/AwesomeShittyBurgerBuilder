@@ -16,10 +16,10 @@ const SideDrawer = props => {
             <Backdrop show={props.show} clicked={props.onClose} />
             <div className={attachedClasses}>
                 <div className={classes.Logo}>
-                    <Logo />{' '}
+                    <Logo />
                 </div>
                 <nav>
-                    <NavigationItems />
+                    <NavigationItems isLoggedIn={props.isLoggedIn} />
                 </nav>
             </div>
         </Wrapper>

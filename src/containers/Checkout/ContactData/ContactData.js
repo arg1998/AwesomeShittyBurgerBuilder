@@ -105,10 +105,11 @@ class ContactData extends Component {
         const order = {
             ingredients: this.props.ingredients,
             price: this.props.totalPrice.toFixed(2),
-            contactData
+            contactData,
+            userID: this.props.userID
         };
 
-        this.props.onPurchaseBurger(order);
+        this.props.onPurchaseBurger(order, this.props.token);
     };
 
     checkValidity(value, rules) {
@@ -193,11 +194,14 @@ class ContactData extends Component {
 const mapStateToProps = newState => ({
     ingredients: newState.burgerBiulderReducer.ingredients,
     totalPrice: newState.burgerBiulderReducer.totalPrice,
-    loading: newState.orderReducer.loading
+    loading: newState.orderReducer.loading,
+    token: newState.authReducer.token,
+    userID: newState.authReducer.userID
 });
 
 const mapDispatchToProps = dispatch => ({
-    onPurchaseBurger: orderData => dispatch(purchaseBurger(orderData))
+    onPurchaseBurger: (orderData, token) =>
+        dispatch(purchaseBurger(orderData, token))
 });
 
 export default connect(

@@ -55,6 +55,33 @@ class Burgeruilder extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
 
+        let buildControls = (
+            <BuildControls
+                ingredientAdded={this.props.onAddIng}
+                ingredientRemoved={this.props.onDelIng}
+                disabled={disabledInfo}
+                price={this.props.totalPrice}
+                initPurchase={this.purchaseHandler}
+                canPurchase={this.updateCanPurchaseState()}
+            />
+        );
+
+        if (!this.props.isLoggedIn) {
+            buildControls = (
+                <p
+                    style={{
+                        textAlign: 'center',
+                        border: '1px #ccc solid',
+                        width: '60%',
+                        height: '60%',
+                        margin: '0 auto',
+                        padding: '20px'
+                    }}>
+                    You Must Sign In to Order a Burger
+                </p>
+            );
+        }
+
         return (
             <Wrapper>
                 <Modal
@@ -69,14 +96,7 @@ class Burgeruilder extends Component {
                 </Modal>
 
                 <Burger ingredients={this.props.ingredients} />
-                <BuildControls
-                    ingredientAdded={this.props.onAddIng}
-                    ingredientRemoved={this.props.onDelIng}
-                    disabled={disabledInfo}
-                    price={this.props.totalPrice}
-                    initPurchase={this.purchaseHandler}
-                    canPurchase={this.updateCanPurchaseState()}
-                />
+                {buildControls}
             </Wrapper>
         );
     }
@@ -86,7 +106,8 @@ const mapStateToProps = newState => ({
     ingredients: newState.burgerBiulderReducer.ingredients,
     totalPrice: newState.burgerBiulderReducer.totalPrice,
     error: newState.burgerBiulderReducer.error,
-    loading: newState.burgerBiulderReducer.loading
+    loading: newState.burgerBiulderReducer.loading,
+    isLoggedIn: !!newState.authReducer.token
 });
 
 const mapDispatchToProps = dispatch => ({
