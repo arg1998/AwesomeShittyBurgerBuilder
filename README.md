@@ -1,4 +1,4 @@
-# Mighty Shitty Awsome Burger Builder ;-)
+# Mighty Shitty Awesome Burger Builder ;-)
 
 this is the course project from [React 16 - The Complete Guide (incl. React Router 4 & Redux)](https://www.udemy.com/react-the-complete-guide-incl-redux/) from Udemy by lovley [Maximilian Schwarzmüller](https://twitter.com/maxedapps) <3
 
