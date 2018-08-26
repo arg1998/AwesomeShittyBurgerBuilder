@@ -1,1 +1,6 @@
 node_modules/
+.vscode/
+.firebase/
+.firebaserc
+.firebase.json
+.README.md
