@@ -15,7 +15,7 @@ import {
     purchaseInit
 } from '../../store/actions/exports';
 
-class Burgeruilder extends Component {
+export class Burgeruilder extends Component {
     state = {
         canPurchase: false, // can purcahse the burger or not?
         purchasing: false // does user clicker the ORDER button?

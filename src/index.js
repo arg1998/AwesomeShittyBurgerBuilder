@@ -9,10 +9,12 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import burgerBiulderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
-
 import thunk from 'redux-thunk';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers =
+    process.env.NODE_ENV === 'development'
+        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+        : null || compose;
 
 const rootReducer = combineReducers({
     burgerBiulderReducer,
@@ -27,7 +29,7 @@ const store = createStore(
 
 const app = (
     <Provider store={store}>
-        <BrowserRouter>
+        <BrowserRouter basename="/">
             <App />
         </BrowserRouter>
     </Provider>
